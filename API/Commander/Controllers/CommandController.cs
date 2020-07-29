@@ -42,6 +42,7 @@ namespace Commander.Controllers
             {
                 return Ok(_mapper.Map<CommandReadDto>(commandItem));
             }
+
             return NotFound();
         }
 
@@ -49,6 +50,11 @@ namespace Commander.Controllers
         [HttpPost]
         public ActionResult <CommandReadDto> CreateCommand(CommandCreateDto commandCreateDto)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var commandModel = _mapper.Map<Command>(commandCreateDto);
             _repository.CreateCommand(commandModel);
             _repository.SaveChanges();
@@ -63,6 +69,11 @@ namespace Commander.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateCommand(int id, CommandUpdateDto commandUpdateDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var commandModelFromRepo = _repository.GetCommandById(id);
             if(commandModelFromRepo == null)
             {
@@ -82,6 +93,11 @@ namespace Commander.Controllers
         [HttpPatch("{id}")]
         public ActionResult PartialCommandUpdate(int id, JsonPatchDocument<CommandUpdateDto> patchDocument)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var commandModelFromRepo = _repository.GetCommandById(id);
             if (commandModelFromRepo == null)
             {
@@ -109,6 +125,11 @@ namespace Commander.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteCommand(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var commandModelFromRepo = _repository.GetCommandById(id);
             if (commandModelFromRepo == null)
             {
